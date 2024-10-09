@@ -1,5 +1,5 @@
 # Use a lightweight Go base image
-FROM golang:1.20-alpine
+FROM golang:1.23-alpine
 
 # Install bash (or sh) to allow exec access inside the container
 RUN apk add --no-cache bash

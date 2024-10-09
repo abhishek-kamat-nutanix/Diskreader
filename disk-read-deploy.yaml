@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diskreader-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: diskreader
+  template:
+    metadata:
+      labels:
+        app: diskreader
+    spec:
+      containers:
+      - name: diskreader
+        image: abhishekkamat27/diskreader:v3
+        volumeMounts:
+        - mountPath: /mnt/data
+          name: diskreader-pvc
+      volumes:
+      - name: diskreader-pvc
+        persistentVolumeClaim:
+          claimName: diskreader-pvc
+      imagePullSecrets:
+      - name: my-registry-secret    
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: diskreader-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName:  default-storageclass
+  resources:
+    requests:
+      storage: 1Gi
+  dataSource:
+    name: snapshot1
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+
