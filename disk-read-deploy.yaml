@@ -14,10 +14,12 @@ spec:
     spec:
       containers:
       - name: diskreader
-        image: abhishekkamat27/diskreader:v3
-        volumeMounts:
-        - mountPath: /mnt/data
-          name: diskreader-pvc
+        image: fedora:26
+        command: ["/bin/sh", "-c"]
+        args: [ "tail -f /dev/null" ]
+        volumeDevices:
+        - name: diskreader-pvc
+          devicePath: /dev/xvda
       volumes:
       - name: diskreader-pvc
         persistentVolumeClaim:
@@ -33,6 +35,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName:  default-storageclass
+  volumeMode: Block
   resources:
     requests:
       storage: 1Gi
